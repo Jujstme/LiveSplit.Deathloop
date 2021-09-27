@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+	<update version="1.0.0">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed" />
+		</files>
+		<changelog>
+			<change>First release</change>
+		</changelog>
+	</update>
+</updates>
