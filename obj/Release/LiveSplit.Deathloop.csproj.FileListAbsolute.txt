@@ -1,0 +1,6 @@
+C:\Users\Emanuele\source\repos\LiveSplit.Deathloop\Components\LiveSplit.Deathloop.dll
+C:\Users\Emanuele\source\repos\LiveSplit.Deathloop\obj\Release\LiveSplit.Deathloop.csproj.AssemblyReference.cache
+C:\Users\Emanuele\source\repos\LiveSplit.Deathloop\obj\Release\LiveSplit.Deathloop.Settings.resources
+C:\Users\Emanuele\source\repos\LiveSplit.Deathloop\obj\Release\LiveSplit.Deathloop.csproj.GenerateResource.cache
+C:\Users\Emanuele\source\repos\LiveSplit.Deathloop\obj\Release\LiveSplit.Deathloop.csproj.CoreCompileInputs.cache
+C:\Users\Emanuele\source\repos\LiveSplit.Deathloop\obj\Release\LiveSplit.Deathloop.dll

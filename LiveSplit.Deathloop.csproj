@@ -7,9 +7,9 @@
     <ProjectGuid>{21223220-7A12-4C57-9AC4-BA4277FF4220}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LiveSplit.Dishonored</RootNamespace>
-    <AssemblyName>LiveSplit.Dishonored</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>LiveSplit.Deathloop</RootNamespace>
+    <AssemblyName>LiveSplit.Deathloop</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -24,9 +24,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>Components\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LiveSplit.Core">
-      <HintPath>..\..\..\Second Desktop\LiveSplit\LiveSplit.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files (x86)\LiveSplit\LiveSplit.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -44,30 +44,26 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="UpdateManager">
-      <HintPath>..\..\..\Second Desktop\LiveSplit\UpdateManager.dll</HintPath>
+      <HintPath>..\..\..\..\..\Program Files (x86)\LiveSplit\UpdateManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DishonoredComponent.cs" />
-    <Compile Include="DishonoredFactory.cs" />
-    <Compile Include="DishonoredSettings.cs">
+    <Compile Include="Deathloop_SplitLogic.cs" />
+    <Compile Include="Deathloop_Component.cs" />
+    <Compile Include="Deathloop_Factory.cs" />
+    <Compile Include="Deathloop_Settings.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DishonoredSettings.Designer.cs">
-      <DependentUpon>DishonoredSettings.cs</DependentUpon>
+    <Compile Include="Deathloop_Settings.Designer.cs">
+      <DependentUpon>Deathloop_Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="GameMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DishonoredSettings.resx">
-      <DependentUpon>DishonoredSettings.cs</DependentUpon>
+    <EmbeddedResource Include="Deathloop_Settings.resx">
+      <DependentUpon>Deathloop_Settings.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="license.txt" />
-    <None Include="readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
