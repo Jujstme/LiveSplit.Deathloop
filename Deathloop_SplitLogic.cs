@@ -1,12 +1,12 @@
-﻿using System;
-using LiveSplit.ComponentUtil;
+﻿using LiveSplit.ComponentUtil;
+using System;
 
 namespace LiveSplit.Deathloop
 {
     class GameVariables
     {
         public string GameName = "DEATHLOOP";
-        public string ExeName = "Deathloop";
+        public string[] ExeName = new string[] { "Deathloop" };
         public byte refreshRate = 60;
         public MemoryWatcherList watchers = new MemoryWatcherList();
 
@@ -29,9 +29,9 @@ namespace LiveSplit.Deathloop
         private void Init()
         {
             var scanner = new SignatureScanner(game, game.MainModule.BaseAddress, game.MainModule.ModuleMemorySize);
-            IntPtr ptr = IntPtr.Zero;
+            IntPtr ptr;
 
-            
+
             ptr = scanner.Scan(new SigScanTarget(3,
                 "F0 FF 0D ????????", // lock dec [Deathloop.exe+3DFB810]  <----
                 "49 8B 3E"));  // mov rdi,[r14]
@@ -79,7 +79,7 @@ namespace LiveSplit.Deathloop
                     _timer.CurrentState.Run.Offset = TimeSpan.FromSeconds(-51.5);
                     break;
             }
-            
+
         }
 
         void update()
@@ -88,7 +88,7 @@ namespace LiveSplit.Deathloop
             vars.OLD_map = vars.CURRENT_map;
             if (vars.gameMapCode.Current.Contains("campaign")) vars.CURRENT_map = vars.gameMapCode.Current.Substring(vars.gameMapCode.Current.LastIndexOf("/") + 1).Replace(".map", "");
             vars.OLD_isLoading = vars.CURRENT_isLoading;
-            vars.CURRENT_isLoading = vars.isLoading.Current || vars.isLoading2.Current || 
+            vars.CURRENT_isLoading = vars.isLoading.Current || vars.isLoading2.Current ||
                                      ((vars.someLoadFlag.Current & (1 << 0)) != 0) ||
                                      (vars.CURRENT_map == "menu" && vars.isConnectingOnline.Current != 20);
         }

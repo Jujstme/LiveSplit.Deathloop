@@ -93,7 +93,8 @@ namespace LiveSplit.Deathloop
             if (checkedCount != _state.Run.Count)
             {
                 this.label3.ForeColor = System.Drawing.Color.FromArgb(255, 0, 0);
-            } else
+            }
+            else
             {
                 this.label3.ForeColor = System.Drawing.Color.FromName("ControlText");
             }
@@ -110,6 +111,8 @@ namespace LiveSplit.Deathloop
                 MessageBox.Show("Your selected settings do not include any split.", "Livesplit - DEATHLOOP", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            this.chkDisableOffset.Checked = false;
+            _state.Run.CategoryName = "Any%";
             _state.Run.Clear();
             if (this.chkMapLeave.Checked)
             {
@@ -127,7 +130,8 @@ namespace LiveSplit.Deathloop
             {
                 _state.Run.AddSegment("Updaam party");
                 _state.Run.AddSegment("Julianna");
-            } else
+            }
+            else
             {
                 _state.Run.AddSegment("Final Loop");
             }
@@ -145,6 +149,38 @@ namespace LiveSplit.Deathloop
                     _state.Run.Offset = TimeSpan.FromSeconds(-51.5);
                     break;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var question = MessageBox.Show("This will set up your splits according to your selected autosplitting options.\n" +
+                            "WARNING: Any existing PB recorded for the current layout will be deleted.\n\n" +
+                            "Do you want to continue?", "Livesplit - DEATHLOOP", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (question == DialogResult.No) return;
+            if (!this.chkMapLeave.Checked && !this.chkMapAntenna.Checked)
+            {
+                MessageBox.Show("Your selected settings do not include any split.", "Livesplit - DEATHLOOP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            this.chkDisableOffset.Checked = true;
+            _state.Run.CategoryName = "Final Loop";
+            _state.Run.Clear();
+            if (this.chkMapLeave.Checked)
+            {
+                _state.Run.AddSegment("Harriet");
+                _state.Run.AddSegment("Noon Complex");
+                _state.Run.AddSegment("Fristad Rock");
+            }
+            if (this.chkMapAntenna.Checked)
+            {
+                _state.Run.AddSegment("Updaam party");
+                _state.Run.AddSegment("Julianna");
+            }
+            else
+            {
+                _state.Run.AddSegment("Deathlööp");
+            }
+            CheckNumberAutoSplits();
         }
     }
 }

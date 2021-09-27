@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using LiveSplit.Deathloop;
+﻿using LiveSplit.Deathloop;
+using LiveSplit.Model;
 using LiveSplit.UI.Components;
 using System;
-using LiveSplit.Model;
+using System.Reflection;
 
 [assembly: ComponentFactory(typeof(DeathloopFactory))]
 

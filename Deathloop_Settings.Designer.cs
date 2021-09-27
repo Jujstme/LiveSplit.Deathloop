@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.chkDisableOffset = new System.Windows.Forms.CheckBox();
             this.chkEnableSplitting = new System.Windows.Forms.CheckBox();
             this.chkrunStart = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -43,8 +44,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkDisableOffset = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -65,6 +66,20 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Options";
+            // 
+            // chkDisableOffset
+            // 
+            this.chkDisableOffset.AutoSize = true;
+            this.chkDisableOffset.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkDisableOffset.Location = new System.Drawing.Point(166, 23);
+            this.chkDisableOffset.Name = "chkDisableOffset";
+            this.chkDisableOffset.Size = new System.Drawing.Size(115, 17);
+            this.chkDisableOffset.TabIndex = 3;
+            this.chkDisableOffset.Text = "Disable timer offset";
+            this.toolTip1.SetToolTip(this.chkDisableOffset, "Enabling this options sets the timer offsets to zero (default: -51.5 seconds).\r\nU" +
+        "se this when you want the timer to start at 0 seconds (eg. Final Loop category)." +
+        "");
+            this.chkDisableOffset.UseVisualStyleBackColor = true;
             // 
             // chkEnableSplitting
             // 
@@ -141,6 +156,7 @@
             // groupBox3
             // 
             this.groupBox3.AutoSize = true;
+            this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.chkAnyPercentSplits);
             this.groupBox3.Location = new System.Drawing.Point(10, 164);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(10);
@@ -211,19 +227,15 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Total numer of splits required for Any% run according to the current settings:";
             // 
-            // chkDisableOffset
+            // button1
             // 
-            this.chkDisableOffset.AutoSize = true;
-            this.chkDisableOffset.Dock = System.Windows.Forms.DockStyle.Left;
-            this.chkDisableOffset.Location = new System.Drawing.Point(166, 23);
-            this.chkDisableOffset.Name = "chkDisableOffset";
-            this.chkDisableOffset.Size = new System.Drawing.Size(115, 17);
-            this.chkDisableOffset.TabIndex = 3;
-            this.chkDisableOffset.Text = "Disable timer offset";
-            this.toolTip1.SetToolTip(this.chkDisableOffset, "Enabling this options sets the timer offsets to zero (default: -51.5 seconds).\r\nU" +
-        "se this when you want the timer to start at 0 seconds (eg. Final Loop category)." +
-        "");
-            this.chkDisableOffset.UseVisualStyleBackColor = true;
+            this.button1.Location = new System.Drawing.Point(154, 26);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(127, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Last Loop";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Settings
             // 
@@ -267,5 +279,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkDisableOffset;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button button1;
     }
 }

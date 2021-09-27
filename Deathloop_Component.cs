@@ -1,12 +1,12 @@
 ﻿using LiveSplit.Model;
-using LiveSplit.UI.Components;
 using LiveSplit.UI;
+using LiveSplit.UI.Components;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Xml;
-using System.Windows.Forms;
 using System.Threading;
+using System.Windows.Forms;
+using System.Xml;
 
 namespace LiveSplit.Deathloop
 {
@@ -22,7 +22,7 @@ namespace LiveSplit.Deathloop
         public Component(LiveSplitState state)
         {
             _timer = new TimerModel { CurrentState = state };
-            _update_timer = new System.Windows.Forms.Timer() { Interval = 1000/vars.refreshRate, Enabled = true };
+            _update_timer = new System.Windows.Forms.Timer() { Interval = 1000 / vars.refreshRate, Enabled = true };
             settings = new Settings(state);
             _update_timer.Tick += updateLogic;
         }
@@ -35,8 +35,7 @@ namespace LiveSplit.Deathloop
         {
             if (game == null || game.HasExited)
             {
-                if (!this.TryGetGameProcess())
-                    return;
+                if (!this.TryGetGameProcess()) return;
             }
             update();
             if (_timer.CurrentState.CurrentPhase == TimerPhase.NotRunning) start();
@@ -58,9 +57,17 @@ namespace LiveSplit.Deathloop
 
         private bool TryGetGameProcess()
         {
-            game = Process.GetProcessesByName(vars.ExeName).FirstOrDefault(p => !p.HasExited);
+            foreach (var process in vars.ExeName)
+            {
+                game = Process.GetProcessesByName(process).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
+                if (game != null) break;
+            }
             if (game == null) return false;
-            Thread.Sleep(1000);
+
+            // game = Process.GetProcessesByName(vars.ExeName).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
+            // game = Process.GetProcessesByName(vars.ExeName).FirstOrDefault(p => !p.HasExited);
+
+            Thread.Sleep(500);
             Init();
             return true;
         }
