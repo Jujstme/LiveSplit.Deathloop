@@ -64,9 +64,6 @@ namespace LiveSplit.Deathloop
             }
             if (game == null) return false;
 
-            // game = Process.GetProcessesByName(vars.ExeName).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
-            // game = Process.GetProcessesByName(vars.ExeName).FirstOrDefault(p => !p.HasExited);
-
             Thread.Sleep(500);
             Init();
             return true;
