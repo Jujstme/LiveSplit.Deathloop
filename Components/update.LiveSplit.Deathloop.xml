@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	 <update version="1.0.2">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Fixed the timer staying paused in the menu while playing in offline mode.</change>
+		</changelog>
+	 </update>
 	 <update version="1.0.1">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>

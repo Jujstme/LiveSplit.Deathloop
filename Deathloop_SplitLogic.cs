@@ -83,7 +83,7 @@ namespace LiveSplit.Deathloop
             vars.OLD_isLoading = vars.CURRENT_isLoading;
             vars.CURRENT_isLoading = vars.isLoading.Current || vars.isLoading2.Current ||
                                      ((vars.someLoadFlag.Current & (1 << 0)) != 0) ||
-                                     (vars.CURRENT_map == "menu" && vars.isConnectingOnline.Current != 20);
+                                     (vars.CURRENT_map == "menu" && vars.isConnectingOnline.Current != 20 && vars.isConnectingOnline.Current != 21);
         }
 
         private void start()
