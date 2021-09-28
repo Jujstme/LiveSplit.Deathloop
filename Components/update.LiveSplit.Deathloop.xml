@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	 <update version="1.0.1">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Fixed the timer incorrectly autostarting then pausing the game in the first map.</change>
+			<change>Added autostart option for Final Loop speedrun category (default: disabled).</change>
+		</changelog>
+	 </update>
 	<update version="1.0.0">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed" />

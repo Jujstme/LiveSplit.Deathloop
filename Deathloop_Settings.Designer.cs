@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkDisableOffset = new System.Windows.Forms.CheckBox();
+            this.chkrunStartLastLoop = new System.Windows.Forms.CheckBox();
             this.chkEnableSplitting = new System.Windows.Forms.CheckBox();
             this.chkrunStart = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -38,6 +38,7 @@
             this.chkMapAntenna = new System.Windows.Forms.CheckBox();
             this.chkMapLeave = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.chkAnyPercentSplits = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -45,7 +46,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -54,7 +54,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.chkDisableOffset);
+            this.groupBox1.Controls.Add(this.chkrunStartLastLoop);
             this.groupBox1.Controls.Add(this.chkEnableSplitting);
             this.groupBox1.Controls.Add(this.chkrunStart);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -67,25 +67,23 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "General Options";
             // 
-            // chkDisableOffset
+            // chkrunStartLastLoop
             // 
-            this.chkDisableOffset.AutoSize = true;
-            this.chkDisableOffset.Dock = System.Windows.Forms.DockStyle.Left;
-            this.chkDisableOffset.Location = new System.Drawing.Point(166, 23);
-            this.chkDisableOffset.Name = "chkDisableOffset";
-            this.chkDisableOffset.Size = new System.Drawing.Size(115, 17);
-            this.chkDisableOffset.TabIndex = 3;
-            this.chkDisableOffset.Text = "Disable timer offset";
-            this.toolTip1.SetToolTip(this.chkDisableOffset, "Enabling this options sets the timer offsets to zero (default: -51.5 seconds).\r\nU" +
-        "se this when you want the timer to start at 0 seconds (eg. Final Loop category)." +
-        "");
-            this.chkDisableOffset.UseVisualStyleBackColor = true;
+            this.chkrunStartLastLoop.AutoSize = true;
+            this.chkrunStartLastLoop.Location = new System.Drawing.Point(89, 23);
+            this.chkrunStartLastLoop.Name = "chkrunStartLastLoop";
+            this.chkrunStartLastLoop.Size = new System.Drawing.Size(140, 17);
+            this.chkrunStartLastLoop.TabIndex = 3;
+            this.chkrunStartLastLoop.Text = "Auto Start on Final Loop";
+            this.toolTip1.SetToolTip(this.chkrunStartLastLoop, "If enabled, the timer wil automatically start when entering the XXX during the mo" +
+        "rning.\r\nThis setting can be used to set automatic timer start in Final Loop cate" +
+        "gory.");
+            this.chkrunStartLastLoop.UseVisualStyleBackColor = true;
             // 
             // chkEnableSplitting
             // 
             this.chkEnableSplitting.AutoSize = true;
-            this.chkEnableSplitting.Dock = System.Windows.Forms.DockStyle.Left;
-            this.chkEnableSplitting.Location = new System.Drawing.Point(83, 23);
+            this.chkEnableSplitting.Location = new System.Drawing.Point(235, 23);
             this.chkEnableSplitting.Name = "chkEnableSplitting";
             this.chkEnableSplitting.Size = new System.Drawing.Size(83, 17);
             this.chkEnableSplitting.TabIndex = 2;
@@ -139,7 +137,7 @@
             this.chkMapAntenna.Name = "chkMapAntenna";
             this.chkMapAntenna.Size = new System.Drawing.Size(435, 17);
             this.chkMapAntenna.TabIndex = 1;
-            this.chkMapAntenna.Text = "Autosplit when reaching the antenna on last loop";
+            this.chkMapAntenna.Text = "Autosplit after reaching the Rakyetoplan during the last loop";
             this.chkMapAntenna.UseVisualStyleBackColor = true;
             // 
             // chkMapLeave
@@ -167,6 +165,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto Setup";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(154, 26);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(127, 23);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "Last Loop";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // chkAnyPercentSplits
             // 
             this.chkAnyPercentSplits.Location = new System.Drawing.Point(13, 26);
@@ -185,7 +193,7 @@
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Location = new System.Drawing.Point(10, 242);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(455, 80);
+            this.groupBox4.Size = new System.Drawing.Size(455, 65);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Information";
@@ -193,7 +201,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(381, 20);
+            this.label4.Location = new System.Drawing.Point(387, 20);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(35, 13);
             this.label4.TabIndex = 3;
@@ -223,19 +231,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(362, 13);
+            this.label1.Size = new System.Drawing.Size(368, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Total numer of splits required for Any% run according to the current settings:";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(154, 26);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(127, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Last Loop";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.label1.Text = "Total number of splits required for Any% run according to the current settings:";
             // 
             // Settings
             // 
@@ -277,7 +275,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox chkDisableOffset;
+        private System.Windows.Forms.CheckBox chkrunStartLastLoop;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button button1;
     }

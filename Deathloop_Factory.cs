@@ -4,17 +4,17 @@ using LiveSplit.UI.Components;
 using System;
 using System.Reflection;
 
-[assembly: ComponentFactory(typeof(DeathloopFactory))]
+[assembly: ComponentFactory(typeof(Factory))]
 
 namespace LiveSplit.Deathloop
 {
-    public class DeathloopFactory : IComponentFactory
+    public class Factory : IComponentFactory
     {
         public string ComponentName => "DEATHLOOP Autosplitter";
         public string Description => "Automatic splitting and loadless timing";
         public ComponentCategory Category => ComponentCategory.Control;
         public string UpdateName => this.ComponentName;
-        public string UpdateURL => "https://raw.githubusercontent.com/Jujstme/LiveSplit.Deathloop/master/";  // Needs to be updated
+        public string UpdateURL => "https://raw.githubusercontent.com/Jujstme/LiveSplit.Deathloop/master/";
         public Version Version => Assembly.GetExecutingAssembly().GetName().Version;
         public string XMLURL => this.UpdateURL + "Components/update.LiveSplit.Deathloop.xml";
         public IComponent Create(LiveSplitState state)

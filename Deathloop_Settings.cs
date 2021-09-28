@@ -9,7 +9,7 @@ namespace LiveSplit.Deathloop
     {
         public bool runStart { get; set; }
         public bool enableSplitting { get; set; }
-        public bool disableOffset { get; set; }
+        public bool runStartLastLoop { get; set; }
         public bool MapLeave { get; set; }
         public bool MapAntenna { get; set; }
         public bool MapVoid { get; set; }
@@ -25,7 +25,7 @@ namespace LiveSplit.Deathloop
             // General settings
             this.chkrunStart.DataBindings.Add("Checked", this, "runStart", false, DataSourceUpdateMode.OnPropertyChanged);
             this.chkEnableSplitting.DataBindings.Add("Checked", this, "enableSplitting", false, DataSourceUpdateMode.OnPropertyChanged);
-            this.chkDisableOffset.DataBindings.Add("Checked", this, "disableOffset", false, DataSourceUpdateMode.OnPropertyChanged);
+            this.chkrunStartLastLoop.DataBindings.Add("Checked", this, "runStartLastLoop", false, DataSourceUpdateMode.OnPropertyChanged);
             this.chkMapLeave.DataBindings.Add("Checked", this, "MapLeave", false, DataSourceUpdateMode.OnPropertyChanged);
             this.chkMapAntenna.DataBindings.Add("Checked", this, "MapAntenna", false, DataSourceUpdateMode.OnPropertyChanged);
             this.chkMapVoid.DataBindings.Add("Checked", this, "MapVoid", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -35,13 +35,14 @@ namespace LiveSplit.Deathloop
             //
             this.runStart = true;
             this.enableSplitting = true;
+            this.runStartLastLoop = false;
             this.MapLeave = this.MapAntenna = this.MapVoid = true;
-            this.disableOffset = false;
 
             // For settings check
             this.chkMapAntenna.CheckedChanged += Settings_OnLoad;
             this.chkMapLeave.CheckedChanged += Settings_OnLoad;
-            this.chkDisableOffset.CheckedChanged += Set_Timer_Offset;
+            this.chkEnableSplitting.CheckedChanged += CheckGraySplitCheckboxes_e;
+            this.chkrunStart.CheckedChanged += CheckGraySplitCheckboxes_e;
         }
 
         public XmlNode GetSettings(XmlDocument doc)
@@ -49,7 +50,7 @@ namespace LiveSplit.Deathloop
             XmlElement settingsNode = doc.CreateElement("settings");
             settingsNode.AppendChild(ToElement(doc, "runStart", this.runStart));
             settingsNode.AppendChild(ToElement(doc, "enableSplitting", this.enableSplitting));
-            settingsNode.AppendChild(ToElement(doc, "disableOffset", this.disableOffset));
+            settingsNode.AppendChild(ToElement(doc, "runStartLastLoop", this.runStartLastLoop));
             settingsNode.AppendChild(ToElement(doc, "MapLeave", this.MapLeave));
             settingsNode.AppendChild(ToElement(doc, "MapAntenna", this.MapAntenna));
             settingsNode.AppendChild(ToElement(doc, "MapVoid", this.MapVoid));
@@ -61,7 +62,7 @@ namespace LiveSplit.Deathloop
         {
             this.runStart = ParseBool(settings, "runStart", true);
             this.enableSplitting = ParseBool(settings, "enableSplitting", true);
-            this.disableOffset = ParseBool(settings, "disableOffset", false);
+            this.runStartLastLoop = ParseBool(settings, "runStartLastLoop", false);
             this.MapLeave = ParseBool(settings, "MapLeave", true);
             this.MapAntenna = ParseBool(settings, "MapAntenna", true);
             this.MapVoid = ParseBool(settings, "MapVoid", true);
@@ -83,7 +84,9 @@ namespace LiveSplit.Deathloop
         private void Settings_OnLoad(object sender, EventArgs e)
         {
             CheckNumberAutoSplits();
+            CheckGraySplitCheckboxes();
         }
+
         private void CheckNumberAutoSplits()
         {
             int checkedCount = (chkMapLeave.Checked ? 10 : 0) + (chkMapAntenna.Checked ? 1 : 0);
@@ -111,7 +114,7 @@ namespace LiveSplit.Deathloop
                 MessageBox.Show("Your selected settings do not include any split.", "Livesplit - DEATHLOOP", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            this.chkDisableOffset.Checked = false;
+            this.chkrunStartLastLoop.Checked = false;
             _state.Run.CategoryName = "Any%";
             _state.Run.Clear();
             if (this.chkMapLeave.Checked)
@@ -133,22 +136,17 @@ namespace LiveSplit.Deathloop
             }
             else
             {
-                _state.Run.AddSegment("Final Loop");
+                _state.Run.AddSegment("Deathlööp");
             }
             CheckNumberAutoSplits();
         }
 
-        private void Set_Timer_Offset(object sender, EventArgs e)
+        private void CheckGraySplitCheckboxes_e(object sender, EventArgs e) { CheckGraySplitCheckboxes(); }
+
+        private void CheckGraySplitCheckboxes()
         {
-            switch (this.chkDisableOffset.Checked)
-            {
-                case true:
-                    _state.Run.Offset = TimeSpan.Zero;
-                    break;
-                case false:
-                    _state.Run.Offset = TimeSpan.FromSeconds(-51.5);
-                    break;
-            }
+            chkMapAntenna.Enabled = chkMapLeave.Enabled = chkMapVoid.Enabled = this.chkEnableSplitting.Checked;
+            chkrunStartLastLoop.Enabled = this.chkrunStart.Checked;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -162,7 +160,7 @@ namespace LiveSplit.Deathloop
                 MessageBox.Show("Your selected settings do not include any split.", "Livesplit - DEATHLOOP", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            this.chkDisableOffset.Checked = true;
+            this.chkrunStartLastLoop.Checked = true;
             _state.Run.CategoryName = "Final Loop";
             _state.Run.Clear();
             if (this.chkMapLeave.Checked)
