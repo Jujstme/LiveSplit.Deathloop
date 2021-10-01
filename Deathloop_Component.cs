@@ -12,12 +12,12 @@ namespace LiveSplit.Deathloop
 {
     partial class Component : LogicComponent
     {
-        public GameVariables vars = new GameVariables();
+        private GameVariables vars = new GameVariables();
         public override string ComponentName => vars.GameName;
-        public Process game;
-        public TimerModel _timer;
+        private Process game;
+        private TimerModel _timer;
         private System.Windows.Forms.Timer _update_timer;
-        public Settings settings { get; set; }
+        private Settings settings { get; set; }
 
         public Component(LiveSplitState state)
         {
@@ -26,16 +26,18 @@ namespace LiveSplit.Deathloop
             settings = new Settings(state);
             _update_timer.Tick += updateLogic;
         }
+
         public override void Dispose()
         {
             settings.Dispose();
             _update_timer?.Dispose();
         }
-        void updateLogic(object sender, EventArgs eventArgs)
+
+        private void updateLogic(object sender, EventArgs eventArgs)
         {
             if (game == null || game.HasExited)
             {
-                if (!this.TryGetGameProcess()) return;
+                if (!TryGetGameProcess()) return;
             }
             update();
             if (_timer.CurrentState.CurrentPhase == TimerPhase.NotRunning) start();
@@ -63,10 +65,13 @@ namespace LiveSplit.Deathloop
                 if (game != null) break;
             }
             if (game == null) return false;
-
-            Thread.Sleep(500);
-            Init();
-            return true;
+            if (Init())
+            {
+                return true;
+            } else {
+                game = null;
+                return false;
+            }
         }
     }
 }

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	 <update version="1.0.3">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Updated sigscans</change>
+			<change>Code optimization</change>
+		</changelog>
+	 </update>
 	 <update version="1.0.2">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
