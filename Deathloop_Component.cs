@@ -4,7 +4,6 @@ using LiveSplit.UI.Components;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -16,7 +15,7 @@ namespace LiveSplit.Deathloop
         public override string ComponentName => vars.GameName;
         private Process game;
         private TimerModel _timer;
-        private System.Windows.Forms.Timer _update_timer;
+        private Timer _update_timer;
         private Settings settings { get; set; }
 
         public Component(LiveSplitState state)
@@ -37,7 +36,15 @@ namespace LiveSplit.Deathloop
         {
             if (game == null || game.HasExited)
             {
-                if (!TryGetGameProcess()) return;
+                try
+                {
+                    if (!HookGameProcess()) return;
+                }
+                catch
+                {
+                    game = null;
+                    return;
+                }
             }
             update();
             if (_timer.CurrentState.CurrentPhase == TimerPhase.NotRunning) start();
@@ -57,21 +64,23 @@ namespace LiveSplit.Deathloop
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode) { }
 
-        private bool TryGetGameProcess()
+        private bool HookGameProcess()
         {
             foreach (var process in vars.ExeName)
             {
                 game = Process.GetProcessesByName(process).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
-                if (game != null) break;
+                if (game == null) continue;
+                if (Init())
+                {
+                    return true;
+                }
+                else
+                {
+                    game = null;
+                    return false;
+                }
             }
-            if (game == null) return false;
-            if (Init())
-            {
-                return true;
-            } else {
-                game = null;
-                return false;
-            }
+            return false;
         }
     }
 }

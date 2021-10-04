@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	 <update version="1.0.4">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Fixed a small oversight leading to LiveSplit crashing in certain scenarios</change>
+		</changelog>
+	 </update>
 	 <update version="1.0.3">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>

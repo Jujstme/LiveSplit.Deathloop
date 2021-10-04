@@ -27,7 +27,8 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>Components\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>

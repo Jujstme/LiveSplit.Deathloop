@@ -25,6 +25,10 @@ namespace LiveSplit.Deathloop
             IntPtr ptr;
             vars.watchers = new MemoryWatcherList();
 
+            // Basic checks
+            if (!game.Is64Bit()) return false;
+            ptr = scanner.Scan(new SigScanTarget("44 45 41 54 48 4C 4F 4F 50 20")); if (ptr == IntPtr.Zero) return false;
+
             ptr = scanner.Scan(new SigScanTarget(3,
                 "F0 FF 0D ????????", // lock dec [Deathloop.exe+3DFB810]  <----
                 "49 8B 3E"));  // mov rdi,[r14]
