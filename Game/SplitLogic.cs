@@ -109,7 +109,7 @@ namespace LiveSplit.Deathloop
             {
                 game = Process.GetProcessesByName(process).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
                 if (game == null) continue;
-                try { watchers = new Watchers(game); } catch { return false; }
+                try { watchers = new Watchers(game); } catch { game = null; return false; }
                 return true;
             }
             return false;
