@@ -17,10 +17,6 @@ namespace LiveSplit.Deathloop
         public string UpdateURL => "https://raw.githubusercontent.com/Jujstme/LiveSplit.Deathloop/master/";
         public Version Version => Assembly.GetExecutingAssembly().GetName().Version;
         public string XMLURL => this.UpdateURL + "Components/update.LiveSplit.Deathloop.xml";
-        public IComponent Create(LiveSplitState state)
-        {
-            return new Component(state);
-        }
-
+        public IComponent Create(LiveSplitState state) { return new Component(state); }
     }
 }

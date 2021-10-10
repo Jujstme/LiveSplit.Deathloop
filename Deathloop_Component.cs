@@ -1,61 +1,85 @@
-﻿using LiveSplit.Model;
-using LiveSplit.UI;
-using LiveSplit.UI.Components;
-using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
 using System.Windows.Forms;
 using System.Xml;
+using LiveSplit.Model;
+using LiveSplit.UI;
+using LiveSplit.UI.Components;
 
 namespace LiveSplit.Deathloop
 {
-    partial class Component : LogicComponent
+    class Component : LogicComponent
     {
-        private GameVariables vars = new GameVariables();
-        public override string ComponentName => vars.GameName;
-        private Process game;
-        private TimerModel _timer;
-        private Timer _update_timer;
+        public override string ComponentName => "DEATHLOOP Autosplitter";
         private Settings settings { get; set; }
+        private readonly TimerModel timer;
+        private readonly Timer update_timer;
+        private readonly SplittingLogic SplittingLogic;
+
 
         public Component(LiveSplitState state)
         {
-            _timer = new TimerModel { CurrentState = state };
-            _update_timer = new System.Windows.Forms.Timer() { Interval = 1000 / vars.refreshRate, Enabled = true };
+            timer = new TimerModel { CurrentState = state };
+            update_timer = new Timer() { Interval = 15, Enabled = true };
             settings = new Settings(state);
-            _update_timer.Tick += updateLogic;
+            update_timer.Tick += UpdateTimer_Tick;
+
+            SplittingLogic = new SplittingLogic();
+            SplittingLogic.OnStartTrigger += OnStartTrigger;
+            SplittingLogic.OnSplitTrigger += OnSplitTrigger;
+            SplittingLogic.OnGameTimeTrigger += OnGameTimeTrigger;
+        }
+
+        void UpdateTimer_Tick(object sender, EventArgs eventArgs) { SplittingLogic.Update(); }
+
+        void OnStartTrigger(object sender, SplittingLogic.StartTrigger type)
+        {
+            if (timer.CurrentState.CurrentPhase != TimerPhase.NotRunning) return;
+            if (!settings.runStart) return;
+            switch (type)
+            {
+                case SplittingLogic.StartTrigger.AnyPercent:
+                    timer.CurrentState.Run.Offset = TimeSpan.FromSeconds(-51.5);
+                    timer.Start();
+                    timer.CurrentState.Run.Offset = TimeSpan.Zero;
+                    break;
+                case SplittingLogic.StartTrigger.LastLoop:
+                    if (!settings.runStartLastLoop) return;
+                    timer.CurrentState.Run.Offset = TimeSpan.Zero;
+                    timer.Start();
+                    break;
+            }
+        }
+
+        void OnGameTimeTrigger(object sender, bool isGameTimePaused)
+        {
+            if (timer.CurrentState.CurrentPhase != TimerPhase.Running) return;
+            timer.CurrentState.IsGameTimePaused = isGameTimePaused;
+        }
+
+        void OnSplitTrigger(object sender, SplittingLogic.SplitTrigger type)
+        {
+            if (timer.CurrentState.CurrentPhase != TimerPhase.Running) return;
+            if (!settings.enableSplitting) return;
+            switch (type)
+            {
+                case SplittingLogic.SplitTrigger.MapLeave:
+                    if (settings.MapLeave) timer.Split();
+                    break;
+                case SplittingLogic.SplitTrigger.MapAntenna:
+                    if (settings.MapAntenna) timer.Split();
+                    break;
+                case SplittingLogic.SplitTrigger.MapVoid:
+                    if (settings.MapVoid) timer.Split();
+                    break;
+            }
         }
 
         public override void Dispose()
         {
             settings.Dispose();
-            _update_timer?.Dispose();
+            update_timer?.Dispose();
         }
 
-        private void updateLogic(object sender, EventArgs eventArgs)
-        {
-            if (game == null || game.HasExited)
-            {
-                try
-                {
-                    if (!HookGameProcess()) return;
-                }
-                catch
-                {
-                    game = null;
-                    return;
-                }
-            }
-            update();
-            if (_timer.CurrentState.CurrentPhase == TimerPhase.NotRunning) start();
-            if (_timer.CurrentState.CurrentPhase == TimerPhase.Running)
-            {
-                isLoading();
-                gameTime();
-                resetLogic();
-                splitLogic();
-            }
-        }
         public override XmlNode GetSettings(XmlDocument document) { return this.settings.GetSettings(document); }
 
         public override Control GetSettingsControl(LayoutMode mode) { return this.settings; }
@@ -63,24 +87,5 @@ namespace LiveSplit.Deathloop
         public override void SetSettings(XmlNode settings) { this.settings.SetSettings(settings); }
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode) { }
-
-        private bool HookGameProcess()
-        {
-            foreach (var process in vars.ExeName)
-            {
-                game = Process.GetProcessesByName(process).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
-                if (game == null) continue;
-                if (Init())
-                {
-                    return true;
-                }
-                else
-                {
-                    game = null;
-                    return false;
-                }
-            }
-            return false;
-        }
     }
 }

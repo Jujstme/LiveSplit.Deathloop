@@ -75,9 +75,9 @@
             this.chkrunStartLastLoop.Size = new System.Drawing.Size(140, 17);
             this.chkrunStartLastLoop.TabIndex = 3;
             this.chkrunStartLastLoop.Text = "Auto Start on Final Loop";
-            this.toolTip1.SetToolTip(this.chkrunStartLastLoop, "If enabled, the timer wil automatically start when entering the XXX during the mo" +
-        "rning.\r\nThis setting can be used to set automatic timer start in Final Loop cate" +
-        "gory.");
+            this.toolTip1.SetToolTip(this.chkrunStartLastLoop, "If enabled, the timer wil automatically start when entering Karl\'s Bay at morning" +
+        ".\r\nThis setting can be used to set automatic timer start in Final Loop category." +
+        "");
             this.chkrunStartLastLoop.UseVisualStyleBackColor = true;
             // 
             // chkEnableSplitting
