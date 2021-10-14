@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	<update version="1.0.6.0">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Added support for the latest game patch released on Oct 14th 2021</change>
+		</changelog>
+	</update>
 	<update version="1.0.5.1">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
