@@ -16,6 +16,7 @@ namespace LiveSplit.Deathloop
 
         private LiveSplitState _state;
 
+
         public Settings(LiveSplitState state)
         {
             InitializeComponent();
@@ -179,6 +180,14 @@ namespace LiveSplit.Deathloop
                 _state.Run.AddSegment("Deathlööp");
             }
             CheckNumberAutoSplits();
+        }
+
+        private void btnResetSave_Click(object sender, EventArgs e)
+        {
+            var question = MessageBox.Show("This will DELETE your save.\nMake sure you have a backup.\n\nDo you want to proceed?", "Deathloop", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (question == DialogResult.No) return;
+            SplittingLogic.ResetFlag = true;
+            MessageBox.Show("Colt's story progression has been reset.", "Deathloop", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

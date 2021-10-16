@@ -46,6 +46,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnResetSave = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -154,6 +155,7 @@
             // groupBox3
             // 
             this.groupBox3.AutoSize = true;
+            this.groupBox3.Controls.Add(this.btnResetSave);
             this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.chkAnyPercentSplits);
             this.groupBox3.Location = new System.Drawing.Point(10, 164);
@@ -235,6 +237,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Total number of splits required for Any% run according to the current settings:";
             // 
+            // btnResetSave
+            // 
+            this.btnResetSave.Location = new System.Drawing.Point(348, 26);
+            this.btnResetSave.Name = "btnResetSave";
+            this.btnResetSave.Size = new System.Drawing.Size(97, 23);
+            this.btnResetSave.TabIndex = 7;
+            this.btnResetSave.Text = "Reset Save File";
+            this.btnResetSave.UseVisualStyleBackColor = true;
+            this.btnResetSave.Click += new System.EventHandler(this.btnResetSave_Click);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,5 +290,6 @@
         private System.Windows.Forms.CheckBox chkrunStartLastLoop;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnResetSave;
     }
 }

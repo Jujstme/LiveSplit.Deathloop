@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	<update version="1.0.6.2">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Added a setting option to reset Colt's story progression. This avoid having to manually delete the savefile and restart the game when you reset a run. Use this setting with caution.</change>
+		</changelog>
+	</update>
 	<update version="1.0.6.1">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
