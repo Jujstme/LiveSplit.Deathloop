@@ -48,7 +48,6 @@ namespace LiveSplit.Deathloop
                 "BE 0C000000"));     // mov esi,0000000C
             if (ptr == IntPtr.Zero) throw new Exception();
             this.isLoading2 = new MemoryWatcher<bool>(new DeepPointer(ptr + 5 + game.ReadValue<int>(ptr))) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-            //this.isConnectingOnline = new MemoryWatcher<byte>(new DeepPointer(ptr + 5 + game.ReadValue<int>(ptr) + 0x4A48)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
             ptr = scanner.Scan(new SigScanTarget(3,
                 "4C 8D 35 ????????",    // lea r14,[Deathloop.exe+31028F8]
@@ -65,35 +64,22 @@ namespace LiveSplit.Deathloop
             this.gameMapCode_byte = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3E08)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
             this.someLoadFlag = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3CE0)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
-
+            ptr = scanner.Scan(new SigScanTarget(3, "488B??????????4889??????4889??????????4889??????????83????????????7E"));   // Just works. Don't ask me why
+            if (ptr == IntPtr.Zero) throw new Exception();
+            int posOffset;
             switch (game.MainModuleWow64Safe().ModuleMemorySize)
             {
                 case 0x22363000:
                 case 0x22CAB000:
                 case 0x23D93000:
-                    /*    ptr = scanner.Scan(new SigScanTarget(3,
-                            "48 8B 05 ????????", // mov rax,[Deathloop.exe+30C8230]   <----
-                            "48 8B C8",          // mov rcx,rax
-                            "48 85 C9",          // test rcx,rcx
-                            "74 2A"));           // je Deathloop.exe+16F64AF
-                        if (ptr == IntPtr.Zero) throw new Exception();
-                        this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2E0, 0x37C8, 0x0, 0xA0, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-                        this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2E0, 0x37C8, 0x0, 0xA0, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-                        */
-                    this.yPos = new MemoryWatcher<float>(new DeepPointer(game.MainModuleWow64Safe().BaseAddress + 0x2D5F688, 0x8, 0x8, 0x98, 0xA0, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-                    this.zPos = new MemoryWatcher<float>(new DeepPointer(game.MainModuleWow64Safe().BaseAddress + 0x2D5F688, 0x8, 0x8, 0x98, 0xA0, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+                    posOffset = 0xA0;
                     break;
                 default:
-                    // case 0x1FC16000:   // New patch from Otc 14th, 2021
-                    ptr = scanner.Scan(new SigScanTarget(7,
-                        "44 89 7E 0C",          // mov [rsi+0C],r15d
-                        "48 8B 0D ????????",    // mov rcx,[Deathloop.exe+2D4EE60]
-                        "48 8B 01"));           // mov rax,[rcx]
-                    if (ptr == IntPtr.Zero) throw new Exception();
-                    this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x8, 0x8, 0x8, 0x98, 0xA8, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-                    this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x8, 0x8, 0x8, 0x98, 0xA8, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+                    posOffset = 0xA8;
                     break;
             }
+            this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+            this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
             this.AddRange(this.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => !p.GetIndexParameters().Any()).Select(p => p.GetValue(this, null) as MemoryWatcher).Where(p => p != null));
         }
