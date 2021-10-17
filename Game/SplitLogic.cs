@@ -49,24 +49,6 @@ namespace LiveSplit.Deathloop
             ResetFlag = false;
             var scanner = new SignatureScanner(game, game.MainModuleWow64Safe().BaseAddress, game.MainModuleWow64Safe().ModuleMemorySize);
             IntPtr ptr;
-
-            /* switch (game.MainModuleWow64Safe().ModuleMemorySize)
-            {
-                case 0x22363000:
-                case 0x22CAB000:
-                case 0x23D93000:
-                    ptr = scanner.Scan(new SigScanTarget(1, "E8 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 5C 24 ?? 48 83 C4 28"));
-                        if (ptr == IntPtr.Zero) return;
-
-                        CreateRemoteThread(game.Handle, IntPtr.Zero, 0, ptr + 4 + game.ReadValue<int>(ptr), (IntPtr)1, 0, out _);
-
-                    break;
-                default:
-
-                    break;
-
-            } */
-
             ptr = scanner.Scan(new SigScanTarget(0, "40 53 48 83 EC 20 48 8B 1D ?? ?? ?? ?? 48 85 DB 0F 84 ?? ?? ?? ??"));
             if (ptr == IntPtr.Zero) return;
             CreateRemoteThread(game.Handle, IntPtr.Zero, 0, ptr, (IntPtr)1, 0, out _);

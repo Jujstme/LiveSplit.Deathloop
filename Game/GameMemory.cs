@@ -64,7 +64,9 @@ namespace LiveSplit.Deathloop
             this.gameMapCode_byte = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3E08)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
             this.someLoadFlag = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3CE0)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
-            ptr = scanner.Scan(new SigScanTarget(3, "488B??????????4889??????4889??????????4889??????????83????????????7E"));   // Just works. Don't ask me why
+            ptr = scanner.Scan(new SigScanTarget(3,
+                "48 8B 2D ????????", // mov rbp,[Deathloop.exe+30C82B0]  <----
+                "44 8B 07"));        // mov r8d,rdi
             if (ptr == IntPtr.Zero) throw new Exception();
             int posOffset;
             switch (game.MainModuleWow64Safe().ModuleMemorySize)
