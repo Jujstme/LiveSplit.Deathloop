@@ -50,19 +50,24 @@ namespace LiveSplit.Deathloop
             this.isLoading2 = new MemoryWatcher<bool>(new DeepPointer(ptr + 5 + game.ReadValue<int>(ptr))) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
             ptr = scanner.Scan(new SigScanTarget(3,
-                "4C 8D 35 ????????",    // lea r14,[Deathloop.exe+31028F8]
-                "33 ED",                // xor ebp,ebp
-                "41 83 7E 10 15"));     // cmp dword ptr [r14+10],15
+                "4C 89 35 ????????",    // mov [Deathloop.exe+30CCD48],r14  <----
+                "44 89 35 ????????",    // mov [Deathloop.exe+30CCD50],r14d
+                "4C 89 35 ????????"));  // mov [Deathloop.exe+30CCD58],r14
             if (ptr == IntPtr.Zero) throw new Exception();
-            this.isConnectingOnline = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x10)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+            this.isConnectingOnline = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr))) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
             ptr = scanner.Scan(new SigScanTarget(3,
-                "48 8B 0D ????????", // mov rcx,[Deathloop.exe+30CCD00]  <----
-                "4C 89 74 24 48"));  // mov [rsp+48],r14
+                "0F B6 05 ????????", // movzx eax,byte ptr [Deathloop.exe+30D0B20]  <----
+                "D0 E8"));           // shr al,1
             if (ptr == IntPtr.Zero) throw new Exception();
-            this.gameMapCode = new StringWatcher(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3E08), 255);
-            this.gameMapCode_byte = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3E08)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-            this.someLoadFlag = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x3CE0)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+            this.gameMapCode = new StringWatcher(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x18), 255);
+            this.gameMapCode_byte = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr) + 0x18)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+
+            ptr = scanner.Scan(new SigScanTarget(14,
+                "48 C7 05 ????????????????",     // mov qword ptr [Deathloop.exe+30D6B80],00000012
+                "44 89 35 ????????"));           // mov [Deathloop.exe+30D0A10],r14d  <----
+            if (ptr == IntPtr.Zero) throw new Exception();
+            this.someLoadFlag = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr))) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
             ptr = scanner.Scan(new SigScanTarget(3,
                 "48 8B 2D ????????", // mov rbp,[Deathloop.exe+30C82B0]  <----
@@ -71,14 +76,8 @@ namespace LiveSplit.Deathloop
             int posOffset;
             switch (game.MainModuleWow64Safe().ModuleMemorySize)
             {
-                case 0x22363000:
-                case 0x22CAB000:
-                case 0x23D93000:
-                    posOffset = 0xA0;
-                    break;
-                default:
-                    posOffset = 0xA8;
-                    break;
+                case 0x22363000: case 0x22CAB000: case 0x23D93000: posOffset = 0xA0; break;
+                default: posOffset = 0xA8; break;
             }
             this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
             this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
