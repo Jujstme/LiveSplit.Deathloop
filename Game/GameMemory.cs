@@ -10,7 +10,7 @@ namespace LiveSplit.Deathloop
     {
         private MemoryWatcher<bool> isLoading { get; }
         public MemoryWatcher<bool> isLoading2 { get; }
-        private MemoryWatcher<byte> isConnectingOnline { get; }
+        public MemoryWatcher<byte> isConnectingOnline { get; }
         private StringWatcher gameMapCode { get; }
         private MemoryWatcher<byte> gameMapCode_byte { get; }
         private MemoryWatcher<byte> someLoadFlag { get; }
@@ -23,8 +23,8 @@ namespace LiveSplit.Deathloop
             this.gameMapCode_byte.Current != 0 ? (this.gameMapCode.Current.Contains("campaign") ? this.gameMapCode.Current.Substring(this.gameMapCode.Current.LastIndexOf("/") + 1).Replace(".map", "") : "") : "");
 
         public FakeMemoryWatcher<bool> LoadPause => new FakeMemoryWatcher<bool>(
-            this.isLoading.Old || this.isLoading2.Old || (this.someLoadFlag.Old & 1) != 0 || (this.Map.Old == Maps.Menu && this.isConnectingOnline.Old < 20),
-            this.isLoading.Current || this.isLoading2.Current || (this.someLoadFlag.Current & 1) != 0 || (this.Map.Current == Maps.Menu && this.isConnectingOnline.Current < 20));
+            (this.isLoading.Old && this.Map.Old != Maps.Menu) || this.isLoading2.Old || (this.someLoadFlag.Old & 1) != 0 || (this.Map.Old == Maps.Menu && this.isConnectingOnline.Old < 20),
+            (this.isLoading.Current && this.Map.Current != Maps.Menu) || this.isLoading2.Current || (this.someLoadFlag.Current & 1) != 0 || (this.Map.Current == Maps.Menu && this.isConnectingOnline.Current < 20));
 
 
         public Watchers(Process game)

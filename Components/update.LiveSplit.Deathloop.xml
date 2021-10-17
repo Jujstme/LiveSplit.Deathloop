@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	<update version="1.0.6.3">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Fixed the in-game timer not pausing during the so-called "double loading screen"</change>
+			<change>Fixed the Colt's campaign progression reset button, which crashed the game in some instances</change>
+		</changelog>
+	</update>
 	<update version="1.0.6.2">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>

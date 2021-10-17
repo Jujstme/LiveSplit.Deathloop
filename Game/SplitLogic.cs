@@ -49,9 +49,27 @@ namespace LiveSplit.Deathloop
             ResetFlag = false;
             var scanner = new SignatureScanner(game, game.MainModuleWow64Safe().BaseAddress, game.MainModuleWow64Safe().ModuleMemorySize);
             IntPtr ptr;
+
+            /* switch (game.MainModuleWow64Safe().ModuleMemorySize)
+            {
+                case 0x22363000:
+                case 0x22CAB000:
+                case 0x23D93000:
+                    ptr = scanner.Scan(new SigScanTarget(1, "E8 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 5C 24 ?? 48 83 C4 28"));
+                        if (ptr == IntPtr.Zero) return;
+
+                        CreateRemoteThread(game.Handle, IntPtr.Zero, 0, ptr + 4 + game.ReadValue<int>(ptr), (IntPtr)1, 0, out _);
+
+                    break;
+                default:
+
+                    break;
+
+            } */
+
             ptr = scanner.Scan(new SigScanTarget(0, "40 53 48 83 EC 20 48 8B 1D ?? ?? ?? ?? 48 85 DB 0F 84 ?? ?? ?? ??"));
             if (ptr == IntPtr.Zero) return;
-            CreateRemoteThread(game.Handle, IntPtr.Zero, 0, ptr, IntPtr.Zero, 0, out _);
+            CreateRemoteThread(game.Handle, IntPtr.Zero, 0, ptr, (IntPtr)1, 0, out _);
         }
 
         void Start()
@@ -75,19 +93,24 @@ namespace LiveSplit.Deathloop
 
         void GameTime()
         {
-            this.OnGameTimeTrigger?.Invoke(this, watchers.LoadPause.Current);
+           // this.OnGameTimeTrigger?.Invoke(this, watchers.LoadPause.Current);
 
-            /*            switch (watchers.Map.Current)
-                        {
-                            case Maps.Menu:
-                                // Need code for timer pausing here
-                                if (watchers.isConnectingOnline.Old < 20 && watchers.isConnectingOnline.Current >= 20) timer.CurrentState.IsGameTimePaused = false;
-                                break;
-                            default:
-                                timer.CurrentState.IsGameTimePaused = watchers.LoadPause.Current;
-                                break;
-                        }
-            */
+            switch (watchers.Map.Current)
+            {
+                case Maps.Menu:
+                    if (!watchers.LoadPause.Old && watchers.LoadPause.Current)
+                    {
+                        this.OnGameTimeTrigger?.Invoke(this, true);
+                    }
+                    if (watchers.isConnectingOnline.Old < 20 && watchers.isConnectingOnline.Current >= 20)
+                    {
+                        this.OnGameTimeTrigger?.Invoke(this, false);
+                    }
+                    break;
+                default:
+                    this.OnGameTimeTrigger?.Invoke(this, watchers.LoadPause.Current);
+                    break;
+            }
         }
 
         void Split()
