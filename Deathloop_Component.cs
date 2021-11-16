@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using LiveSplit.Model;
@@ -12,24 +14,23 @@ namespace LiveSplit.Deathloop
         public override string ComponentName => "DEATHLOOP Autosplitter";
         private Settings settings { get; set; }
         private readonly TimerModel timer;
-        private readonly Timer update_timer;
+        private readonly Task SplittingTask;
         private readonly SplittingLogic SplittingLogic;
-
 
         public Component(LiveSplitState state)
         {
             timer = new TimerModel { CurrentState = state };
-            update_timer = new Timer() { Interval = 15, Enabled = true };
             settings = new Settings(state);
-            update_timer.Tick += UpdateTimer_Tick;
 
             SplittingLogic = new SplittingLogic();
             SplittingLogic.OnStartTrigger += OnStartTrigger;
             SplittingLogic.OnSplitTrigger += OnSplitTrigger;
             SplittingLogic.OnGameTimeTrigger += OnGameTimeTrigger;
-        }
+            settings.ResetColtProgression += SplittingLogic.ResetColtProgression;
 
-        void UpdateTimer_Tick(object sender, EventArgs eventArgs) { SplittingLogic.Update(); }
+            SplittingTask = new Task(() => { while (true) { SplittingLogic.Update(); Thread.Sleep(15); } });
+            SplittingTask.Start();
+        }
 
         void OnStartTrigger(object sender, SplittingLogic.StartTrigger type)
         {
@@ -77,7 +78,7 @@ namespace LiveSplit.Deathloop
         public override void Dispose()
         {
             settings.Dispose();
-            update_timer?.Dispose();
+            SplittingTask.Dispose();
         }
 
         public override XmlNode GetSettings(XmlDocument document) { return this.settings.GetSettings(document); }

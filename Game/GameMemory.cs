@@ -16,6 +16,7 @@ namespace LiveSplit.Deathloop
         private MemoryWatcher<byte> someLoadFlag { get; }
         public MemoryWatcher<float> yPos { get; }
         public MemoryWatcher<float> zPos { get; }
+        private IntPtr ColtResetPtr { get; }
 
         // FakeMemoryWatchers
         public FakeMemoryWatcher<string> Map => new FakeMemoryWatcher<string>(
@@ -82,7 +83,14 @@ namespace LiveSplit.Deathloop
             this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
             this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
+            this.ColtResetPtr = scanner.Scan(new SigScanTarget(0, "40 53 48 83 EC 20 48 8B 1D ?? ?? ?? ?? 48 85 DB 0F 84 ?? ?? ?? ??"));
+
             this.AddRange(this.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(p => !p.GetIndexParameters().Any()).Select(p => p.GetValue(this, null) as MemoryWatcher).Where(p => p != null));
+        }
+
+        public void ResetColtProgression(Process game)
+        {
+            game.CreateThread(this.ColtResetPtr);
         }
     }
 
@@ -95,7 +103,7 @@ namespace LiveSplit.Deathloop
         {
             this.Old = old;
             this.Current = current;
-            this.Changed = (object)old != (object)current;
+            this.Changed = !old.Equals(current);
         }
     }
 

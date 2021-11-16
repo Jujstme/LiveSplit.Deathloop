@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <updates>
+	<update version="1.0.7.1">
+		<files>
+			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>
+		</files>
+		<changelog>
+			<change>Changed the main update logic.</change>
+			<change>Changed behaviour of the embedded savefile resetter. The button will now automatically disable itself after resetting Colt's progression for 5 seconds. This should prevent a couple of crashings. If the new feature is borked, please report me.</change>
+		</changelog>
+	</update>
 	<update version="1.0.7.0">
 		<files>
 			<file path="Components/LiveSplit.Deathloop.dll" status="changed"/>

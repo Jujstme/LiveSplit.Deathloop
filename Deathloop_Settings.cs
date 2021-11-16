@@ -15,7 +15,8 @@ namespace LiveSplit.Deathloop
         public bool MapVoid { get; set; }
 
         private LiveSplitState _state;
-
+        private Timer ColtButtonTimer;
+        public event EventHandler ResetColtProgression;
 
         public Settings(LiveSplitState state)
         {
@@ -44,6 +45,10 @@ namespace LiveSplit.Deathloop
             this.chkMapLeave.CheckedChanged += Settings_OnLoad;
             this.chkEnableSplitting.CheckedChanged += CheckGraySplitCheckboxes_e;
             this.chkrunStart.CheckedChanged += CheckGraySplitCheckboxes_e;
+
+            // Colt Reset button
+            this.ColtButtonTimer = new Timer() { Enabled = true, Interval = 5000 };
+            this.ColtButtonTimer.Tick += EnableColtButtonTimer;
         }
 
         public XmlNode GetSettings(XmlDocument doc)
@@ -186,8 +191,16 @@ namespace LiveSplit.Deathloop
         {
             var question = MessageBox.Show("This will DELETE your save.\nMake sure you have a backup.\n\nDo you want to proceed?", "Deathloop", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (question == DialogResult.No) return;
-            SplittingLogic.ResetFlag = true;
+            this.btnResetSave.Enabled = false;
+            this.ResetColtProgression.Invoke(this, EventArgs.Empty);
+            this.ColtButtonTimer.Enabled = true;
             MessageBox.Show("Colt's story progression has been reset.", "Deathloop", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void EnableColtButtonTimer(object sender, EventArgs e)
+        {
+            this.btnResetSave.Enabled = true;
+            this.ColtButtonTimer.Enabled = false;
         }
     }
 }

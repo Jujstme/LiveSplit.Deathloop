@@ -1,8 +1,6 @@
-﻿using LiveSplit.ComponentUtil;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace LiveSplit.Deathloop
 {
@@ -20,38 +18,15 @@ namespace LiveSplit.Deathloop
         public delegate void SplitTriggerEventHandler(object sender, SplitTrigger type);
         public event SplitTriggerEventHandler OnSplitTrigger;
 
-        public static bool ResetFlag = false;
-
         public void Update()
         {
-            if (game == null || game.HasExited)
-            {
-                if (!HookGameProcess())
-                {
-                    ResetFlag = false;
-                    return; 
-                }
-            }
+            if (game == null || game.HasExited) { if (!HookGameProcess()) return; }
             watchers.UpdateAll(game);
             Start();
             //IsLoading();
             GameTime();
             //ResetLogic();
             Split();
-            if (ResetFlag) ResetColtProgression();
-        }
-
-
-        [DllImport("kernel32")]
-        public static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, out uint lpThreadId);
-        public void ResetColtProgression()
-        {
-            ResetFlag = false;
-            var scanner = new SignatureScanner(game, game.MainModuleWow64Safe().BaseAddress, game.MainModuleWow64Safe().ModuleMemorySize);
-            IntPtr ptr;
-            ptr = scanner.Scan(new SigScanTarget(0, "40 53 48 83 EC 20 48 8B 1D ?? ?? ?? ?? 48 85 DB 0F 84 ?? ?? ?? ??"));
-            if (ptr == IntPtr.Zero) return;
-            CreateRemoteThread(game.Handle, IntPtr.Zero, 0, ptr, (IntPtr)1, 0, out _);
         }
 
         void Start()
@@ -119,6 +94,11 @@ namespace LiveSplit.Deathloop
             }
         }
 
+        public void ResetColtProgression(object sender, EventArgs type)
+        {
+            try { watchers.ResetColtProgression(game); } catch { }
+        }
+
 
         public enum StartTrigger
         {
@@ -139,7 +119,7 @@ namespace LiveSplit.Deathloop
             {
                 game = Process.GetProcessesByName(process).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
                 if (game == null) continue;
-                try { watchers = new Watchers(game); } catch { game = null; ResetFlag = false; return false; }
+                try { watchers = new Watchers(game); } catch { game = null; return false; }
                 return true;
             }
             return false;
