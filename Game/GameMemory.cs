@@ -70,18 +70,19 @@ namespace LiveSplit.Deathloop
             if (ptr == IntPtr.Zero) throw new Exception();
             this.someLoadFlag = new MemoryWatcher<byte>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr))) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
+            // Determining player position
             ptr = scanner.Scan(new SigScanTarget(3,
                 "48 8B 2D ????????", // mov rbp,[Deathloop.exe+30C82B0]  <----
                 "44 8B 07"));        // mov r8d,rdi
             if (ptr == IntPtr.Zero) throw new Exception();
-            int posOffset;
-            switch (game.MainModuleWow64Safe().ModuleMemorySize)
-            {
-                case 0x22363000: case 0x22CAB000: case 0x23D93000: posOffset = 0xA0; break;
-                default: posOffset = 0xA8; break;
-            }
-            this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
-            this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, 0x1F0, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+            int posOffset = 0xA8;
+            switch (game.MainModuleWow64Safe().ModuleMemorySize) { case 0x22363000: case 0x22CAB000: case 0x23D93000: posOffset = 0xA0; break; }
+
+            IntPtr ptr2 = scanner.Scan(new SigScanTarget(3, "48 8B B0 ???????? 48 8D B8 ???????? 8B 47 08"));
+            int posOffset2 = ptr2 == IntPtr.Zero ? 0x1F0 : game.ReadValue<int>(ptr2);
+
+            this.yPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, posOffset2, 0x84)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
+            this.zPos = new MemoryWatcher<float>(new DeepPointer(ptr + 4 + game.ReadValue<int>(ptr), 0x2F8, 0x0, 0x0, 0x98, posOffset, posOffset2, 0x88)) { FailAction = MemoryWatcher.ReadFailAction.SetZeroOrNull };
 
             this.ColtResetPtr = scanner.Scan(new SigScanTarget(0, "40 53 48 83 EC 20 48 8B 1D ?? ?? ?? ?? 48 85 DB 0F 84 ?? ?? ?? ??"));
 

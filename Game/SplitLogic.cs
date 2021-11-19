@@ -94,19 +94,19 @@ namespace LiveSplit.Deathloop
             }
         }
 
-        public void ResetColtProgression(object sender, EventArgs type)
+        internal void ResetColtProgression(object sender, EventArgs type)
         {
             try { watchers.ResetColtProgression(game); } catch { }
         }
 
 
-        public enum StartTrigger
+        internal enum StartTrigger
         {
             AnyPercent,
             LastLoop
         }
 
-        public enum SplitTrigger
+        internal enum SplitTrigger
         {
             MapLeave,
             MapAntenna,
@@ -115,7 +115,7 @@ namespace LiveSplit.Deathloop
 
         bool HookGameProcess()
         {
-            foreach (var process in new string[] { "Deathloop" })
+            foreach (string process in new string[] { "Deathloop" })
             {
                 game = Process.GetProcessesByName(process).OrderByDescending(x => x.StartTime).FirstOrDefault(x => !x.HasExited);
                 if (game == null) continue;

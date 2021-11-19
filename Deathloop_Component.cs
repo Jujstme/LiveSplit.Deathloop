@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using LiveSplit.Model;
@@ -84,7 +83,7 @@ namespace LiveSplit.Deathloop
         public override void Dispose()
         {
             settings.Dispose();
-            update_timer.Dispose();
+            update_timer?.Dispose();
         }
 
         public override XmlNode GetSettings(XmlDocument document) { return this.settings.GetSettings(document); }
